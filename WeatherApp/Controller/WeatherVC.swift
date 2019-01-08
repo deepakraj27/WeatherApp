@@ -11,26 +11,23 @@ import CoreLocation
 import ObjectMapper
 import MBProgressHUD
 
-class ViewController: UIViewController {
+class WeatherVC: UIViewController {
     @IBOutlet weak var currentSelectedCityWeatherView: UIView!
     @IBOutlet weak var currentCityWeatherIcon: UIImageView!
     @IBOutlet weak var currentCityWeatherInDegrees: UILabel!
     @IBOutlet weak var currentCityWeatherStatusDescription: UILabel!
     @IBOutlet weak var currentLocationNameLabel: UILabel!
-
     @IBOutlet weak var showInCelsius: UIButton!
-
     @IBOutlet weak var showInFarrnheit: UIButton!
-
     @IBOutlet weak var dayAndTimeLabel: UILabel!
     @IBOutlet weak var notifyUserView: UIView!
     @IBOutlet weak var notifyImage: UIImageView!
     @IBOutlet weak var notifyHeading: UILabel!
     @IBOutlet weak var notifyDescription: UILabel!
     @IBOutlet weak var tryAgainButtonOutlet: UIButton!
+    
     var showDegreesInCelsius: Bool = true
     var currentLocationName: String? = nil
-    
     var weatherCurrentConditionData: GetCurrentConditionDone?
 
     override func viewDidLoad() {
@@ -54,6 +51,11 @@ class ViewController: UIViewController {
             self.showInCelsius.setTitleColor(UIColor.darkGray, for: .normal)
             self.showInFarrnheit.setTitleColor(UIColor.blue, for: .normal)
         }
+    }
+    
+    @IBAction func tryAgainAction(_ sender: Any) {
+        resetVcContent()
+        fetchLocationFromGPS()
     }
     
 
@@ -142,7 +144,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController{
+extension WeatherVC{
     //MARK:- Get Location Key API
     fileprivate func getLocationKey(latLong: String){
         let getLocationKeyInit = GetLocationKeyInit(apikey: Constants.WEATHER_API_KEY, q: latLong)
@@ -182,11 +184,11 @@ extension ViewController{
 
     fileprivate func backgroundViewColorChange(_ temp: String) {
         let tempInNum = Double(temp) ?? 0
-        if  tempInNum < 20{
+        if  tempInNum <= 20{
             self.view.backgroundColor = UIColor.paleBlue
-        }else if tempInNum > 21 && tempInNum < 30{
+        }else if tempInNum >= 21 && tempInNum <= 30{
             self.view.backgroundColor = UIColor.limeYellow
-        }else if tempInNum > 31 && tempInNum < 50{
+        }else if tempInNum >= 31 && tempInNum <= 50{
             self.view.backgroundColor = UIColor.swadOrange
         }else{
             self.view.backgroundColor = UIColor.red
@@ -195,11 +197,11 @@ extension ViewController{
     
     fileprivate func backgroundViewColorChangeForFarenheit(_ temp: String) {
         let tempInNum = Double(temp) ?? 0
-        if  tempInNum < Conversions.shared.celsiusToFahrenheit(tempInC: 20){
+        if  tempInNum <= Conversions.shared.celsiusToFahrenheit(tempInC: 20){
             self.view.backgroundColor = UIColor.paleBlue
-        }else if tempInNum > Conversions.shared.celsiusToFahrenheit(tempInC: 21) && tempInNum < Conversions.shared.celsiusToFahrenheit(tempInC: 30){
+        }else if tempInNum >= Conversions.shared.celsiusToFahrenheit(tempInC: 21) && tempInNum <= Conversions.shared.celsiusToFahrenheit(tempInC: 30){
             self.view.backgroundColor = UIColor.limeYellow
-        }else if tempInNum > Conversions.shared.celsiusToFahrenheit(tempInC: 31) && tempInNum < Conversions.shared.celsiusToFahrenheit(tempInC: 50){
+        }else if tempInNum >= Conversions.shared.celsiusToFahrenheit(tempInC: 31) && tempInNum <= Conversions.shared.celsiusToFahrenheit(tempInC: 50){
             self.view.backgroundColor = UIColor.swadOrange
         }else{
             self.view.backgroundColor = UIColor.red

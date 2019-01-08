@@ -15,7 +15,7 @@ extension UIColor{
     }
     
     public class var limeYellow: UIColor{
-        return UIColor(red:0.80, green:0.86, blue:0.22, alpha:1.0) // #cddc39
+        return UIColor(red:1.00, green:1.00, blue:0.00, alpha:1.0) // #ffff00
     }
     
     public class var swadOrange: UIColor{
