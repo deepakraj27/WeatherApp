@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  WeatherApp
+
+  Created by Deepakraj Murugesan on 07/01/19.
+  Copyright © 2019 Noticeboard. All rights reserved.
+*/
+
+"action_cancel" = "Cancel";
+"message_access_location" = "This App does not have access to your location. To enable access, tap settings and turn on Location Services.";
+"label_settings" = "Settings";
+"message_location_failure_heading" = "No Location Found";
+"message_location_failure" = "We were unable to fetch your location. \nPlease retry";
