@@ -1,7 +1,15 @@
 /* 
-  ArabicLocalizable.strings
+  Localizable.strings
   WeatherApp
 
   Created by Deepakraj Murugesan on 07/01/19.
   Copyright © 2019 Noticeboard. All rights reserved.
 */
+
+"action_cancel" = "إلغاء";
+"message_access_location" = "هذا التطبيق لا يستطيع الوصول إلى موقعك.    لتمكين الوصول ، انقر على الإعدادات وشغِّل";
+"label_settings" = "الإعدادات";
+"message_location_failure_heading" = "لا يوجد موقع";
+"message_location_failure" = "لم نتمكن من جلب موقعك. الرجاء اعادة المحاولة";
+"message_weather_data_not_loading_heading" = "بيانات الطقس غير متاحة";
+"message_weather_data_not_loading_description" = "نحن غير قادرين على جلب تفاصيل الطقس لموقعك";

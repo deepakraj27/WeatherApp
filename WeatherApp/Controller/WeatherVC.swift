@@ -291,12 +291,20 @@ extension WeatherVC{
             }
             
             if selectedLanguageisEnglish {
-                currentCityWeatherStatusDescription.textAlignment = .left
+                UIView.appearance().semanticContentAttribute = .forceLeftToRight
+
             }else{
-                currentCityWeatherStatusDescription.textAlignment = .right
+                UIView.appearance().semanticContentAttribute = .forceRightToLeft
+
             }
             currentCityWeatherStatusDescription.text = eachCellData.weatherText ?? ""
+            
             self.hideLoader()
+
+            let vc = self.storyboard?.instantiateViewController(withIdentifier: "vc") as! WeatherVC
+            let appDlg = UIApplication.shared.delegate as? AppDelegate
+            appDlg?.window?.rootViewController = vc
+            
         }
     }
 }

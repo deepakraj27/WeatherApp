@@ -11,3 +11,5 @@
 "label_settings" = "Settings";
 "message_location_failure_heading" = "No Location Found";
 "message_location_failure" = "We were unable to fetch your location. \nPlease retry";
+"message_weather_data_not_loading_heading" = "Weather Data Unavailable";
+"message_weather_data_not_loading_description" = "We where unable to fetch the weather details for your location";
