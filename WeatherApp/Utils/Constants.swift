@@ -10,4 +10,6 @@ import Foundation
 
 struct Constants {
     static let WEATHER_API_KEY = "cAaWXN7I0s63yNkkZcprYNerzkfScnmg"
+    static let EnglishLanguage = "en-us"
+    static let ArabicLanguage = "ar-sa"
 }

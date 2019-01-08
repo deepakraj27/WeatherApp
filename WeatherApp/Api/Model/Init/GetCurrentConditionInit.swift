@@ -11,9 +11,15 @@ import ObjectMapper
 
 class GetCurrentConditionInit: Mappable{
     var apikey: String = ""
+    var language: String = "en-us"
+    //ar-sa for arabic
+    init() {
+        
+    }
     
-    init(apikey: String) {
+    init(apikey: String, language: String = "en-us") {
         self.apikey = apikey
+        self.language = language
     }
     
     required init?(map: Map) {
@@ -22,5 +28,6 @@ class GetCurrentConditionInit: Mappable{
     
     func mapping(map: Map) {
         apikey <- map["apikey"]
+        language <- map["language"]
     }
 }

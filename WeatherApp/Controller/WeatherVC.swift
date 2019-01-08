@@ -26,18 +26,35 @@ class WeatherVC: UIViewController {
     @IBOutlet weak var notifyDescription: UILabel!
     @IBOutlet weak var tryAgainButtonOutlet: UIButton!
     
+    @IBOutlet weak var languageChooser: UIStackView!
+    @IBOutlet weak var englishOutlet: UIButton!
+    @IBOutlet weak var arabicOutlet: UIButton!
+    
+    var selectedLanguageisEnglish = true
     var showDegreesInCelsius: Bool = true
     var currentLocationName: String? = nil
     var weatherCurrentConditionData: GetCurrentConditionDone?
 
+    fileprivate func selectedLanguage() {
+        if selectedLanguageisEnglish{
+            self.englishOutlet.setTitleColor(UIColor.blue, for: .normal)
+            self.arabicOutlet.setTitleColor(UIColor.darkGray, for: .normal)
+        }else{
+            self.englishOutlet.setTitleColor(UIColor.darkGray, for: .normal)
+            self.arabicOutlet.setTitleColor(UIColor.blue, for: .normal)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         resetVcContent()
+        selectedLanguage()
         showUIForCelsiusOrFarenheit()
         fetchLocationFromGPS()
     }
 
     fileprivate func resetVcContent(){
+        self.languageChooser.isHidden = true
         self.currentSelectedCityWeatherView.isHidden = true
         self.notifyUserView.isHidden = true
     }
@@ -52,6 +69,22 @@ class WeatherVC: UIViewController {
             self.showInFarrnheit.setTitleColor(UIColor.blue, for: .normal)
         }
     }
+    
+    
+    @IBAction func showInEnglish(_ sender: Any) {
+        selectedLanguageisEnglish = true
+        resetVcContent()
+        selectedLanguage()
+        showUIForCelsiusOrFarenheit()
+        fetchLocationFromGPS()
+    }
+    
+    @IBAction func showInArabic(_ sender: Any) {
+        selectedLanguageisEnglish = false
+        resetVcContent()
+        selectedLanguage()
+        showUIForCelsiusOrFarenheit()
+        fetchLocationFromGPS()    }
     
     @IBAction func tryAgainAction(_ sender: Any) {
         resetVcContent()
@@ -161,7 +194,13 @@ extension WeatherVC{
     //MARK:- Get Current Conditions API
     //This current conditions of a location can only be fetched, if we have the location key from accuweather.
     fileprivate func getCurrentConditions(locationKey: String){
-        let currentConditionInit = GetCurrentConditionInit(apikey: Constants.WEATHER_API_KEY)
+        var currentConditionInit = GetCurrentConditionInit()
+        if selectedLanguageisEnglish{
+            currentConditionInit = GetCurrentConditionInit(apikey: Constants.WEATHER_API_KEY, language: Constants.EnglishLanguage)
+        }else{
+            currentConditionInit = GetCurrentConditionInit(apikey: Constants.WEATHER_API_KEY, language: Constants.ArabicLanguage)
+        }
+        
         WeatherHandler.getCurrentConditions(locationKey: locationKey, queryParams: currentConditionInit, withSuccess: { (response: String) in
             self.hideLoader()
             
@@ -219,6 +258,7 @@ extension WeatherVC{
     
     fileprivate func showWeather() {
         if let eachCellData = self.weatherCurrentConditionData{
+            self.languageChooser.isHidden = false
             self.notifyUserView.isHidden = true
             self.currentSelectedCityWeatherView.isHidden = false
             
@@ -250,6 +290,11 @@ extension WeatherVC{
                 self.currentCityWeatherIcon.image = nil
             }
             
+            if selectedLanguageisEnglish {
+                currentCityWeatherStatusDescription.textAlignment = .left
+            }else{
+                currentCityWeatherStatusDescription.textAlignment = .right
+            }
             currentCityWeatherStatusDescription.text = eachCellData.weatherText ?? ""
             self.hideLoader()
         }

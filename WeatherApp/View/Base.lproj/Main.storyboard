@@ -84,7 +84,7 @@
                                         <color key="textColor" red="0.52941176470588236" green="0.52941176470588236" blue="0.52941176470588236" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Saturday, 12:00PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xCg-kx-W3e">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xCg-kx-W3e">
                                         <rect key="frame" x="12" y="24" width="351" height="30"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="25"/>
                                         <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
@@ -167,27 +167,63 @@
                                     <constraint firstItem="bA5-cO-Buo" firstAttribute="trailing" secondItem="4Da-T2-uQn" secondAttribute="trailing" id="vl0-kc-81F"/>
                                 </constraints>
                             </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="3yJ-LF-mel">
+                                <rect key="frame" x="105.5" y="79" width="164" height="40"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IYC-1k-b8M">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="40"/>
+                                        <state key="normal" title="English">
+                                            <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showInEnglish:" destination="xjV-8U-OeI" eventType="touchUpInside" id="5xf-f6-HNQ"/>
+                                        </connections>
+                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="afN-PK-AdO">
+                                        <rect key="frame" x="62" y="0.0" width="1" height="40"/>
+                                        <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="1" id="VCZ-rg-VQg"/>
+                                            <constraint firstAttribute="height" constant="40" id="oqU-FO-gr0"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Idk-n6-LEk">
+                                        <rect key="frame" x="75" y="0.0" width="89" height="40"/>
+                                        <state key="normal" title="Arabic (عربى)">
+                                            <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showInArabic:" destination="xjV-8U-OeI" eventType="touchUpInside" id="Fjp-Zb-Vrm"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="5S5-c4-6Nf" firstAttribute="centerX" secondItem="Umr-IG-5bf" secondAttribute="centerX" id="RO3-so-zfq"/>
                             <constraint firstItem="6hV-X8-mXH" firstAttribute="centerY" secondItem="Umr-IG-5bf" secondAttribute="centerY" id="Tol-OY-JXg"/>
                             <constraint firstItem="5S5-c4-6Nf" firstAttribute="leading" secondItem="du6-VT-RW7" secondAttribute="leading" id="W7N-Mg-8Uf"/>
+                            <constraint firstItem="3yJ-LF-mel" firstAttribute="centerX" secondItem="Umr-IG-5bf" secondAttribute="centerX" id="Z3G-ik-uRG"/>
                             <constraint firstItem="du6-VT-RW7" firstAttribute="trailing" secondItem="5S5-c4-6Nf" secondAttribute="trailing" id="arc-3W-YaC"/>
                             <constraint firstItem="6hV-X8-mXH" firstAttribute="centerX" secondItem="Umr-IG-5bf" secondAttribute="centerX" id="bH8-6q-KmK"/>
                             <constraint firstItem="du6-VT-RW7" firstAttribute="trailing" secondItem="6hV-X8-mXH" secondAttribute="trailing" id="fw0-db-Yv9"/>
+                            <constraint firstItem="3yJ-LF-mel" firstAttribute="top" secondItem="du6-VT-RW7" secondAttribute="top" constant="59" id="mZN-PA-8Zz"/>
                             <constraint firstItem="6hV-X8-mXH" firstAttribute="leading" secondItem="du6-VT-RW7" secondAttribute="leading" id="wgq-2M-jnZ"/>
                             <constraint firstItem="5S5-c4-6Nf" firstAttribute="centerY" secondItem="Umr-IG-5bf" secondAttribute="centerY" id="zSt-2q-2dt"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="du6-VT-RW7"/>
                     </view>
                     <connections>
+                        <outlet property="arabicOutlet" destination="Idk-n6-LEk" id="gKC-FH-7P2"/>
                         <outlet property="currentCityWeatherIcon" destination="TcN-IQ-ojA" id="J6t-7C-XqY"/>
                         <outlet property="currentCityWeatherInDegrees" destination="sD1-F5-agx" id="DQD-Tr-stk"/>
                         <outlet property="currentCityWeatherStatusDescription" destination="bA5-cO-Buo" id="J5d-0g-kO6"/>
                         <outlet property="currentLocationNameLabel" destination="4Da-T2-uQn" id="Z2f-ON-qnP"/>
                         <outlet property="currentSelectedCityWeatherView" destination="6hV-X8-mXH" id="dqN-9z-viK"/>
                         <outlet property="dayAndTimeLabel" destination="xCg-kx-W3e" id="C6S-4r-uRs"/>
+                        <outlet property="englishOutlet" destination="IYC-1k-b8M" id="PBY-oY-tuO"/>
+                        <outlet property="languageChooser" destination="3yJ-LF-mel" id="Ygq-mq-OEM"/>
                         <outlet property="notifyDescription" destination="Noi-vu-EiC" id="Tk1-bu-vM5"/>
                         <outlet property="notifyHeading" destination="3x8-id-P10" id="H5Q-Sv-lNB"/>
                         <outlet property="notifyImage" destination="axd-dU-uOF" id="M03-3r-3y0"/>
