@@ -34,6 +34,7 @@ class WeatherVC: UIViewController {
     var showDegreesInCelsius: Bool = true
     var currentLocationName: String? = nil
     var weatherCurrentConditionData: GetCurrentConditionDone?
+    var latLong: String? = nil
 
     fileprivate func selectedLanguage() {
         if selectedLanguageisEnglish{
@@ -76,7 +77,13 @@ class WeatherVC: UIViewController {
         resetVcContent()
         selectedLanguage()
         showUIForCelsiusOrFarenheit()
-        fetchLocationFromGPS()
+        //just to speed up the process this has to be removed once all the locations are added
+        if let latLong = latLong{
+            showLoader()
+            self.getLocationKey(latLong: latLong)
+        }else{
+            fetchLocationFromGPS()
+        }
     }
     
     @IBAction func showInArabic(_ sender: Any) {
@@ -84,7 +91,14 @@ class WeatherVC: UIViewController {
         resetVcContent()
         selectedLanguage()
         showUIForCelsiusOrFarenheit()
-        fetchLocationFromGPS()    }
+        //just to speed up the process this has to be removed once all the locations are added
+        if let latLong = latLong{
+            showLoader()
+            self.getLocationKey(latLong: latLong)
+        }else{
+            fetchLocationFromGPS()
+        }
+    }
     
     @IBAction func tryAgainAction(_ sender: Any) {
         resetVcContent()
@@ -95,7 +109,7 @@ class WeatherVC: UIViewController {
     fileprivate func fetchLocationFromGPS() {
         LocationHandler.shared.settingLocationPermissions(vc: self)
         LocationHandler.shared.locationPickedBlock = {(latitude: CLLocationDegrees, longitude: CLLocationDegrees) in
-            self.convertLatLongToName(latitude: latitude, longitude: longitude)
+            self.latLong = "\(latitude),\(longitude)"
             self.getLocationKey(latLong: "\(latitude),\(longitude)")
         }
         
@@ -129,31 +143,6 @@ class WeatherVC: UIViewController {
         showDegreesInCelsius = false
         showWeather()
     }
-    //MARK:- Convert Lat Long to Location Name.
-    //Pass the lat long to this function it will convert to the necessary location name
-    func convertLatLongToName(latitude: CLLocationDegrees, longitude: CLLocationDegrees){
-        var locationName: String = ""
-        //Add the name to the textfield and wipe the data and fetcht the location
-        let cllocation = CLLocation.init(latitude: latitude, longitude: longitude)
-        CLGeocoder().reverseGeocodeLocation(cllocation) { (placemarks: [CLPlacemark]?, error: Error?) in
-            if error == nil{
-                if let placemarks = placemarks, let placemark = placemarks.first{
-                    if let locality = placemark.locality, let adminArea = placemark.administrativeArea{
-                        locationName = "\(locality), \(adminArea)"
-                    }else{
-                        if let locality = placemark.locality{
-                            locationName = locality
-                        }else{
-                            if let adminArea = placemark.administrativeArea{
-                                locationName = adminArea
-                            }
-                        }
-                    }
-                    self.currentLocationName = locationName
-                }
-            }
-        }
-    }
     
     fileprivate func showLoader(){
         MBProgressHUD.showAdded(to: view, animated: true)
@@ -180,9 +169,15 @@ class WeatherVC: UIViewController {
 extension WeatherVC{
     //MARK:- Get Location Key API
     fileprivate func getLocationKey(latLong: String){
-        let getLocationKeyInit = GetLocationKeyInit(apikey: Constants.WEATHER_API_KEY, q: latLong)
+        var getLocationKeyInit = GetLocationKeyInit()
+        if selectedLanguageisEnglish{
+            getLocationKeyInit = GetLocationKeyInit(apikey: Constants.WEATHER_API_KEY, q: latLong,  language: Constants.EnglishLanguage)
+        }else{
+            getLocationKeyInit = GetLocationKeyInit(apikey: Constants.WEATHER_API_KEY, q: latLong,  language: Constants.ArabicLanguage)
+        }
         WeatherHandler.getLocationKey(queryParams: getLocationKeyInit, withSuccess: { (response: GetLocationKeyDone) in
             if let locationKey = response.locationKey{
+                self.currentLocationName = response.getLocationName()
                 self.getCurrentConditions(locationKey: locationKey)
             }
         }, withFailure: {(err: Error) in
@@ -204,7 +199,7 @@ extension WeatherVC{
         WeatherHandler.getCurrentConditions(locationKey: locationKey, queryParams: currentConditionInit, withSuccess: { (response: String) in
             self.hideLoader()
             
-            DispatchQueue.global(qos: .userInteractive).async {
+            DispatchQueue.global(qos: .background).async {
                 if let getCurrentConditionDone = Mapper<GetCurrentConditionDone>().mapArray(JSONString: response){
                     if let currentConditionDatum = getCurrentConditionDone.first{
                         self.weatherCurrentConditionData = currentConditionDatum
@@ -250,14 +245,32 @@ extension WeatherVC{
     func getDateinRF339Format() -> String {
         let date = Date()
         let rfc339Formatter = DateFormatter()
-        rfc339Formatter.locale = Locale(identifier: "en_US_POSIX")
+        if selectedLanguageisEnglish{
+            rfc339Formatter.locale = Locale(identifier: "en_US_POSIX")
+        }else{
+            rfc339Formatter.locale = Locale(identifier: "ar_DZ")
+        }
         rfc339Formatter.dateFormat = "EEEE, hh:mm aa"
         rfc339Formatter.timeZone = TimeZone.current
         return rfc339Formatter.string(from: date)
     }
     
+    func setAlignment(alignmnet: NSTextAlignment){
+        self.dayAndTimeLabel.textAlignment = alignmnet
+        self.currentLocationNameLabel.textAlignment = alignmnet
+        self.currentCityWeatherStatusDescription.textAlignment = alignmnet
+    }
+    
     fileprivate func showWeather() {
         if let eachCellData = self.weatherCurrentConditionData{
+            if selectedLanguageisEnglish {
+                UIView.appearance().semanticContentAttribute = .forceLeftToRight
+                setAlignment(alignmnet: .left)
+            }else{
+                UIView.appearance().semanticContentAttribute = .forceRightToLeft
+                setAlignment(alignmnet: .right)
+            }
+            
             self.languageChooser.isHidden = false
             self.notifyUserView.isHidden = true
             self.currentSelectedCityWeatherView.isHidden = false
@@ -290,21 +303,8 @@ extension WeatherVC{
                 self.currentCityWeatherIcon.image = nil
             }
             
-            if selectedLanguageisEnglish {
-                UIView.appearance().semanticContentAttribute = .forceLeftToRight
-
-            }else{
-                UIView.appearance().semanticContentAttribute = .forceRightToLeft
-
-            }
             currentCityWeatherStatusDescription.text = eachCellData.weatherText ?? ""
-            
             self.hideLoader()
-
-            let vc = self.storyboard?.instantiateViewController(withIdentifier: "vc") as! WeatherVC
-            let appDlg = UIApplication.shared.delegate as? AppDelegate
-            appDlg?.window?.rootViewController = vc
-            
         }
     }
 }

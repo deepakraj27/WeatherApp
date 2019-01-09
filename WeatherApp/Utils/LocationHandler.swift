@@ -79,8 +79,9 @@ extension LocationHandler: CLLocationManagerDelegate{
             if location.horizontalAccuracy > 0{
                 let latitude = location.coordinate.latitude
                 let longitude = location.coordinate.longitude
-                
+                locationManager.stopUpdatingLocation()
                 self.locationPickedBlock?(latitude, longitude)
+                
                 //                self.locationPickedBlock?("\(latitude), \(longitude)")
             }
         }
